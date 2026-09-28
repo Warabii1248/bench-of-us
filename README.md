@@ -45,6 +45,7 @@ Claude Code、Codex、OpenCodeなどのコーディングエージェントを�
 | 日付 | タイトル | 作成者 | コンピュータ / マザーボード | GPU | ベンチ |
 |------|----------|--------|-----------------------------|-----|--------|
 | 2026-09-28 | [RTX 5060 TiでGemma 4 26B A4B QAT-MTPを131Kコンテキストまで計測](report/2026-09-28_210656_profiling_gemma4_26b_a4b_qat_mtp_on_rtx5060ti.md) | RockinWool | ASRock B650 PG Lightning | RTX 5060 Ti + RTX 5070 | Gemma4 26B A4B QAT Q4_K_M + MTP（131K、単一GPU） |
+| 2026-09-28 | [RTX 3060 12GB + RAM で Strata により Qwen3.8-Flash-Next（125B MoE）を回す](report/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram.md) | eightman999 | Thirdwave XA7C-R47T / ASRock B760 TW/D4 | RTX 3060 12GB | Qwen3.8-Flash-Next Q2_0 |
 | 2026-09-28 | [RX 7900 XT + RX 7800 XTでQwen3.8 27B IQ4 XSのsplit-modeを比較](report/2026-09-28_040646_qwen3_8_27b_iq4xs_128k_benchmark_on_rx7900xt_and_rx7800xt.md) | ogawara | ASUS ProArt X870E-CREATOR WIFI | RX 7900 XT + RX 7800 XT | Qwen3.8 27B UD-IQ4_XS（128K、各構成3回） |
 | 2026-09-27 | [RTX 3090 4 枚で Qwen3.8 27B の split-mode を比較（Windows・コア1395 MHz固定設定）](report/2026-09-27_130914_comparing_qwen3.8_27b_split_modes_on_4x_rtx3090_at_1395mhz_on_windows.md) | 錦幸佳 | ASUS ROG CROSSHAIR VIII DARK HERO | RTX 3090 × 4 | Qwen3.8 27B UD-Q4_K_XL |
 | 2026-09-27 | [GTX 1660 SUPER 6GBで Qwen2.5-Coder 7B のGPU/CPUオフロードを計測](report/2026-09-27_124604_measuring_gpu_cpu_offload_of_qwen2_5_coder_7b_on_gtx1660super_6gb.md) | antarashi | ASRock B450 Pro4 | GTX 1660 SUPER × 1 | Qwen2.5-Coder 7B Q4_K_M |
