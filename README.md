@@ -44,6 +44,7 @@ Claude Code、Codex、OpenCodeなどのコーディングエージェントを�
 
 | 日付 | タイトル | 作成者 | コンピュータ / マザーボード | GPU | ベンチ |
 |------|----------|--------|-----------------------------|-----|--------|
+| 2026-10-01 | [RTX 3090 4 枚で Qwen3.8 27B の split-mode を比較（Ubuntu・NCCL）](report/2026-10-01_203001_comparing_qwen3.8_27b_split_modes_on_4x_rtx3090_with_nccl_on_ubuntu.md) | 錦幸佳 | ASUS ROG CROSSHAIR VIII DARK HERO | RTX 3090 × 4 | Qwen3.8 27B UD-Q4_K_XL |
 | 2026-09-27 | [RTX 3090 4 枚で Qwen3.8 27B の split-mode を比較（Windows・コア1395 MHz固定設定）](report/2026-09-27_130914_comparing_qwen3.8_27b_split_modes_on_4x_rtx3090_at_1395mhz_on_windows.md) | 錦幸佳 | ASUS ROG CROSSHAIR VIII DARK HERO | RTX 3090 × 4 | Qwen3.8 27B UD-Q4_K_XL |
 | 2026-09-26 | [Tesla T4 4 枚で Qwen3.8 27B の split-mode と量子化を比較](report/2026-09-26_084514_comparing_split_modes_and_quantizations_of_qwen3.8_27b_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Qwen3.8 27B UD-Q4_K_XL / UD-Q6_K / Q8_0 |
 | 2026-09-26 | [RTX 5070 12GB 1枚で Qwen3.8 27B GSQ IQ2_S を計測（8K短縮プロファイル）](report/2026-09-26_094401_profiling_qwen3.8_27b_gsq_iq2_s_on_rtx5070_12gb.md) | fumimatsu | GIGABYTE X870M AORUS ELITE WIFI7 ICE | RTX 5070 × 1 | Qwen3.8 27B GSQ-RCO IQ2_S |
