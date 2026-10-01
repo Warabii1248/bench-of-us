@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-27T09:39:22+0900",
+  "tag": "halogen",
+  "machine": "GMKtec EVO-X2 128GB — Halogen adapter (solid=synthetic decode)",
+  "measurement_runner": "custom Halogen adapter using llama-split-bench profile-compatible depth-ladder semantics; llama-split-bench runner not used",
+  "engine": "Halogen 0.14.0",
+  "model": "halogen-qwen3.8-flash-next",
+  "endpoint": "/v1/completions",
+  "ctx": 262144,
+  "stages": "0,32000,64000,128000,196000,258000",
+  "n_predict": 1000,
+  "pp0_sizes": "512,2048,8192",
+  "temperature": 0,
+  "drafter": "mtp",
+  "prompt_protocol": "literal-extension synthetic ladder; differs from stock llama-split-bench moving-TAIL prompt because Halogen did not resume from that intermediate prefix in preflight",
+  "stage0_protocol": "short synthetic continuation chosen to match deeper ladder generation character; not the stock llama-split-bench stage-0 prompt",
+  "real_prompt_protocol": {
+    "source": "llama-split-bench measure_real.py built-in design/review/qa prompts",
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "n_predict": 1200,
+    "runs_per_workload": 1
+  },
+  "real_correction_factor": 0.5719630570767259,
+  "modes": [
+    {
+      "name": "halogen",
+      "device": "Radeon 8060S",
+      "split": "single UMA"
+    }
+  ],
+  "cache_k": "Halogen native",
+  "cache_v": "Halogen native",
+  "halogen_health": {
+    "api_version": "0.14.0",
+    "engine_version": "0.14.0",
+    "context": 262144,
+    "kv_pool_positions": 262144,
+    "drafter_default": "mtp",
+    "prompt_cache_enabled": true
+  }
+}

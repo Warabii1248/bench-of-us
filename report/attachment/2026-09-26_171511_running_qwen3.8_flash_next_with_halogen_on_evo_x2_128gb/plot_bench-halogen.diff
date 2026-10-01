@@ -1,0 +1,19 @@
+--- a/plot_bench.py
++++ b/plot_bench.py
+@@ -295,9 +295,13 @@
+     # ---- suptitle ----
+     deep = max(r["effective_depth"] for r in data[series[0]]) / 1000
+     date = str(info.get("date", ""))[:10]
+-    m = re.search(r"commit ([0-9a-f]+)", info.get("bin_version", ""))
+-    sha8 = info.get("bin_sha256", "")[:8]
+-    ver = f"llama.cpp master {m.group(1)} (sha {sha8})" if m else f"llama.cpp (sha {sha8})"
++    engine = str(info.get("engine", "")).strip()
++    if engine:
++        ver = engine
++    else:
++        m = re.search(r"commit ([0-9a-f]+)", info.get("bin_version", ""))
++        sha8 = info.get("bin_sha256", "")[:8]
++        ver = f"llama.cpp master {m.group(1)} (sha {sha8})" if m else f"llama.cpp (sha {sha8})"
+     machine = info.get("machine", "")
+     npred = info.get("n_predict", 1000)
+     ctxk = info.get("ctx", 0) // 1024

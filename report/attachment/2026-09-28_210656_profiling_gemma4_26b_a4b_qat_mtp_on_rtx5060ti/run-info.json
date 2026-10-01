@@ -1,0 +1,23 @@
+{
+  "tag": "gemma4_qat_mtp_131k_r3",
+  "date": "2026-09-28T21:06:55+09:00",
+  "ctx": 131072,
+  "stages": "0,32768,65536,128000",
+  "n_predict": 1000,
+  "modes": [
+    {
+      "name": "profile",
+      "device": "CUDA0",
+      "split": "",
+      "argv_file": "argv-profile.txt"
+    }
+  ],
+  "machine": "ASRock B650 PG Lightning — RTX 5060 Ti + RTX 5070",
+  "bin": "[local Docker wrapper]",
+  "bin_version": "========== == CUDA == ==========  CUDA Version 13.0.0  Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.  This container image and its contents are governed by the NVIDIA Deep Learning Container License. By pulling and using the container, you accept the terms and conditions of this license: https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license  A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.   version: 0.5.0-dev (build 1, commit 4364bf7) built with GNU 13.3.0 for Linux x86_64",
+  "bin_sha256": "13d25fbfe43eb36b72cd2a7d9442bf7f194cb893eb6c4eff01e08d49073870ed",
+  "cache_k": "q4_0",
+  "cache_v": "q4_0",
+  "launch_prefix": "",
+  "tensor_split": ""
+}

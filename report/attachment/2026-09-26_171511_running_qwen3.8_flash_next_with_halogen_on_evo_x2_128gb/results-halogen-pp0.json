@@ -1,0 +1,42 @@
+{
+  "tag": "halogen",
+  "pp512": {
+    "prompt_n": 529,
+    "cache_n": 0,
+    "prompt_ms": 1266.9,
+    "prompt_per_second": 417.555,
+    "predicted_n": 64,
+    "predicted_per_second": 42.838,
+    "halogen_prefix_n": 5,
+    "disk_restore_n": 0,
+    "actual_prompt_tokens": 529,
+    "finish_reason": "length",
+    "wall_s": 2.769
+  },
+  "pp2048": {
+    "prompt_n": 2048,
+    "cache_n": 0,
+    "prompt_ms": 2401.7,
+    "prompt_per_second": 852.729,
+    "predicted_n": 64,
+    "predicted_per_second": 43.223,
+    "halogen_prefix_n": 9,
+    "disk_restore_n": 0,
+    "actual_prompt_tokens": 2048,
+    "finish_reason": "length",
+    "wall_s": 3.891
+  },
+  "pp8192": {
+    "prompt_n": 8198,
+    "cache_n": 0,
+    "prompt_ms": 6972.9,
+    "prompt_per_second": 1175.694,
+    "predicted_n": 64,
+    "predicted_per_second": 75.409,
+    "halogen_prefix_n": 9,
+    "disk_restore_n": 0,
+    "actual_prompt_tokens": 8198,
+    "finish_reason": "length",
+    "wall_s": 7.849
+  }
+}

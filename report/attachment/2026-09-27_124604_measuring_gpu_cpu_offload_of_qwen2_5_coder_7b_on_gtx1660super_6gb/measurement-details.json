@@ -1,0 +1,99 @@
+{
+  "model_sha256": "60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463",
+  "model_bytes": 4683074048,
+  "gguf_name": "Qwen2.5 Coder 7B Instruct",
+  "quantization": "Q4_K_M",
+  "hardware_observation": {
+    "collected": "2026-09-27T12:36:04.5927881+09:00",
+    "cpu": {
+      "Name": "AMD Ryzen 7 5700X 8-Core Processor",
+      "NumberOfCores": 8,
+      "NumberOfLogicalProcessors": 16
+    },
+    "board": {
+      "Manufacturer": "ASRock",
+      "Product": "B450 Pro4"
+    },
+    "ram": [
+      {
+        "Capacity": 17179869184,
+        "Speed": 2400,
+        "ConfiguredClockSpeed": 2400,
+        "SMBIOSMemoryType": 26
+      },
+      {
+        "Capacity": 8589934592,
+        "Speed": 2400,
+        "ConfiguredClockSpeed": 2400,
+        "SMBIOSMemoryType": 26
+      },
+      {
+        "Capacity": 17179869184,
+        "Speed": 2400,
+        "ConfiguredClockSpeed": 2400,
+        "SMBIOSMemoryType": 26
+      },
+      {
+        "Capacity": 8589934592,
+        "Speed": 2400,
+        "ConfiguredClockSpeed": 2400,
+        "SMBIOSMemoryType": 26
+      }
+    ],
+    "os": {
+      "Caption": "Microsoft Windows 10 Home",
+      "Version": "10.0.19045",
+      "BuildNumber": "19045",
+      "TotalVisibleMemorySize": 50253152,
+      "FreePhysicalMemory": 24466932
+    },
+    "windows": {
+      "ProductName": "Windows 10 Home",
+      "DisplayVersion": "22H2",
+      "CurrentBuild": "19045",
+      "UBR": 7725
+    },
+    "gpu": [
+      "name, memory.total [MiB], driver_version, pcie.link.gen.current, pcie.link.gen.max, pcie.link.width.current, pcie.link.width.max, memory.used [MiB]",
+      "NVIDIA GeForce GTX 1660 SUPER, 6144 MiB, 617.14, 3, 3, 16, 16, 5094 MiB"
+    ]
+  },
+  "runtime_placement": {
+    "gpu_layers": 22,
+    "total_layers": 29,
+    "gpu_repeating_layers": 21,
+    "output_layer_on_gpu": true,
+    "cpu_mapped_model_mib": 1236.36,
+    "gpu_model_mib": 3224.09,
+    "cpu_kv_mib": 59.5,
+    "gpu_kv_mib": 178.5,
+    "gpu_compute_mib": 79.94,
+    "cuda_host_compute_mib": 5.58
+  },
+  "vram_sampling_summary": {
+    "sampling_interval_seconds": 2,
+    "samples": 211,
+    "scope": "whole GPU, including Windows display; startup through benchmark completion",
+    "baseline_mib": 1524,
+    "min_mib": 1524,
+    "max_mib": 5268,
+    "temperature_min_c": 49,
+    "temperature_max_c": 63,
+    "elapsed_sample_span_seconds": 420.17,
+    "pcie_gen_observed": [
+      "3"
+    ],
+    "pcie_width_observed": [
+      "16"
+    ]
+  },
+  "wsl_memory_observation_mib": {
+    "total": 23991,
+    "swap_total": 6144,
+    "swap_used_at_midrun_sample": 0
+  },
+  "main_repetitions_per_condition": 1,
+  "smoke_repetitions_per_condition": 1,
+  "main_completed": true,
+  "privacy_note": "Only public copies have binary/model paths anonymized and the numeric loopback address replaced by a placeholder. Original measurements are preserved locally."
+}

@@ -1,0 +1,196 @@
+Halogen adapter measurement protocol
+====================================
+
+Purpose
+-------
+This file records the execution conditions and measurement semantics used for:
+  GMKtec EVO-X2 128GB / Radeon 8060S
+  Qwen3.8-Flash-Next
+  Halogen 0.14.0
+  final profile run:
+  2026-09-27_093219_balance-halogen-profile-final
+
+Important
+---------
+- llama-split-bench itself was NOT used as the measurement runner.
+- A custom Halogen API adapter called /v1/completions and recorded Halogen's
+  timings fields.
+- The report/figure follows the llama-split-bench --profile layout and stage
+  structure where possible.
+- The plot was generated with llama-split-bench plot_bench.py at:
+  7af72d4085aa5073677d41389144112dd94fcb74
+  with only the engine/version display patched so run-info.json "engine" can
+  be shown instead of a hard-coded llama.cpp label.
+
+Halogen server launch
+---------------------
+podman --runtime=crun run --rm -p 8731:8731 \
+  --device /dev/kfd \
+  --device /dev/dri \
+  --group-add keep-groups \
+  --ipc=host \
+  --ulimit memlock=-1:-1 \
+  -e HALOGEN_KV_POOL_POSITIONS=262144 \
+  -e HALOGEN_MAX_TOK=16384 \
+  -v ~/models/Qwen3.8-Flash-Next-Halogen:/models:ro \
+  ghcr.io/peonist-ai/halogen-flash-server:0.14.0
+
+Container image digest
+----------------------
+sha256:ec7ec0c6f955f48329bb444efa97286dc8216e9ab1b130bc40d7d8c3babdf6b2
+
+Host / power conditions
+-----------------------
+- BIOS Power Mode: Balance Mode
+- Linux power profile: balanced
+- CPU EPP: balance_performance
+- CPU boost: enabled
+- Relevant kernel command line:
+    amd_iommu=off
+    amdgpu.gttsize=126976
+    ttm.pages_limit=32505856
+    ttm.page_pool_size=32505856
+
+Endpoint / request semantics
+----------------------------
+- Endpoint: /v1/completions
+- Raw completion; no chat template
+- Prompt cache: enabled
+- Ladder / PP0 temperature: 0
+- Ladder generation length: 1000 tokens per stage
+- Real-prompt correction:
+    temperature = 0.7
+    top_p = 0.9
+    max_tokens = 1200
+    workloads = design / review / qa
+    one run per workload
+- Generated output may contain a <think> block.
+- MTP is enabled through Halogen's default drafter.
+
+Depth ladder
+------------
+Target stages:
+  0, 32000, 64000, 128000, 196000, 258000
+
+Final measured ladder depths:
+  stage 0 : 447 prompt tokens
+  32k     : 32021
+  64k     : 64025
+  128k    : 128005
+  196k    : 196010
+  258k    : 258030
+
+Why the prompt construction differs from stock llama-split-bench
+----------------------------------------------------------------
+Stock llama-split-bench grows its synthetic prompt with a moving TAIL.
+With Halogen, a preflight showed that the common prefix was recognized
+(prefix_n reported the shared prefix), but cache_n remained 0 for the
+extension. In other words, the engine did not resume KV from that
+intermediate shared-prefix point.
+
+Therefore the final adapter uses literal prefix extension:
+the entire previous-stage prompt becomes the literal prefix of the next
+stage prompt.
+
+Cache reuse evidence in the final run:
+  32k   : cache_n =      0, prompt_n = 32021
+  64k   : cache_n =  32021, prompt_n = 32004
+  128k  : cache_n =  64025, prompt_n = 63980
+  196k  : cache_n = 128005, prompt_n = 68005
+  258k  : cache_n = 196010, prompt_n = 62020
+
+For 64k and later, cache_n exactly matches the previous stage depth.
+All final ladder stages reported disk_restore_n = 0.
+
+Prefill semantics
+-----------------
+Halogen timings.prompt_n is the number of newly processed prompt tokens.
+timings.prompt_ms is the engine time spent processing those tokens.
+The reported prompt_per_second was independently checked as:
+
+  prompt_n / (prompt_ms / 1000)
+
+and matched to numerical precision.
+
+Therefore the plotted ladder prefill values represent incremental prefill
+of newly processed tokens, not full-context 0..N cold prefill.
+
+Depth-0 PP0
+-----------
+Fresh-prompt measurements, cache_n = 0:
+  529 tokens  ->  417.555 tok/s
+  2048 tokens ->  852.729 tok/s
+  8198 tokens -> 1175.694 tok/s
+
+The plot uses the 2048-token PP0 value for depth-0 prefill, matching the
+llama-split-bench plotter behavior.
+
+Decode / real-prompt correction
+-------------------------------
+Synthetic ladder decode:
+  stage 0 : 73.591 tok/s
+  32k     : 74.028 tok/s
+  64k     : 75.668 tok/s
+  128k    : 74.678 tok/s
+  196k    : 73.762 tok/s
+  258k    : 72.335 tok/s
+
+Real-prompt decode:
+  design : 45.475 tok/s
+  review : 39.227 tok/s
+  qa     : 41.572 tok/s
+  mean   : 42.091 tok/s
+
+Correction factor:
+  mean(real_decode / stage0_synthetic_decode)
+  = 0.5719630570767259
+
+The plotter applies this factor uniformly to the synthetic decode curve,
+producing the thin dashed real-operation estimate.
+
+Important interpretation:
+- solid decode = measured synthetic-sequence decode
+- thin dashed decode = real-prompt-corrected estimate
+- the solid synthetic curve is MTP-friendly and should not be read as a
+  typical real-prompt decode rate
+
+MTP counters
+------------
+Raw Halogen draft counters were preserved in the JSON, but no acceptance
+rate is published. Their semantics were not independently confirmed to be
+identical to llama-split-bench/llama.cpp, and some stages report accepted
+counts greater than draft_n.
+
+Plot generation
+---------------
+Final figure generation:
+
+  ~/.venvs/bench-plot/bin/python plot_bench-halogen.py \
+    --dir <final-run-dir> \
+    --series halogen \
+    --lang ja \
+    --estimate on \
+    --vs off \
+    --out split-bench
+
+  ~/.venvs/bench-plot/bin/python plot_bench-halogen.py \
+    --dir <final-run-dir> \
+    --series halogen \
+    --lang en \
+    --estimate on \
+    --vs off \
+    --out split-bench
+
+The run-info machine label used in the final figure is:
+  GMKtec EVO-X2 128GB — Halogen adapter (solid=synthetic decode)
+
+Privacy / publication
+---------------------
+The response-text files used for local validation are not part of the
+published attachment set:
+  stage0-response.txt
+  real-response-design.txt
+  real-response-review.txt
+  real-response-qa.txt
+
+Only metrics / hashes and reproducibility metadata are intended for upload.
