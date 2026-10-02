@@ -53,7 +53,29 @@ export CUDA_VISIBLE_DEVICES="GPU-<3060のUUID>"
 
 ### 結果
 
-深度はプロンプトの累積トークン数（同一会話を伸ばし、エンジンは差分のみ再読）。prefill はその段で新規に読んだ分の速度。
+llama-split-bench 式の深度ラダー：各段は指定トークン長の新規プロンプトを投げて prefill（read）/ decode を計測する（Strata は OpenAI API 経由のため llama-split-bench は非適用、自作スクリプトで同等の計測を実施）。
+
+![深度ラダー](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata-ladder-ja.png)
+
+| depth（プロンプト tok） | prefill t/s | decode t/s |
+|------:|------:|------:|
+| 130 | 58.1 | 29.5 |
+| 7,852 | 434.8 | 29.7 |
+| 16,042 | 436.9 | 26.3 |
+| 24,076 | 431.8 | 30.5 |
+| 30,472 | 416.3 | 28.1 |
+
+depth 0 相当の prefill（生成なし・プロンプト長別）:
+
+| prompt tok | prefill t/s |
+|------:|------:|
+| 598 | 226.1 |
+| 2,080 | 369.0 |
+| 8,242 | 420.1 |
+
+計測時の最大 VRAM 使用量は 11,521 MiB。decode は深度に対しほぼ平坦（29.5 → 28.1 t/s）。
+
+参考：初回計測は同一会話を伸ばす累積型で実施した（エンジンは差分のみ再読するため、下表の prefill はその段で新規に読んだ分の速度）。MTP 採用率も併記する。
 
 | depth | 新規読み込み tok | prefill t/s | decode t/s | MTP 採用 |
 |------:|------:|------:|------:|------:|
@@ -74,6 +96,9 @@ export CUDA_VISIBLE_DEVICES="GPU-<3060のUUID>"
 
 ## 添付
 
-- [strata-ladder-results.json](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata-ladder-results.json)（各段の usage・速度・採用率）
+- [strata-ladder-ja.png](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata-ladder-ja.png) / [strata-ladder-en.png](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata-ladder-en.png)（深度ラダーの図）
+- [results-strata-ladder.json](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/results-strata-ladder.json)（新規プロンプト型ラダー + depth0 prefill の生データ）
+- [argv-3060-ladder.txt](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/argv-3060-ladder.txt)（エンジン起動引数）
+- [results-strata-ladder-cumulative.json](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/results-strata-ladder-cumulative.json)（初回計測：会話累積型ラダーの usage・速度・採用率）
 - [strata-engine-log.txt](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata-engine-log.txt)（エンジンの起動ログと各リクエスト統計）
 - [strata_ladder.py](attachment/2026-09-28_142648_strata_flash_next_q20_on_rtx3060_plus_ram/strata_ladder.py)（計測スクリプト）
