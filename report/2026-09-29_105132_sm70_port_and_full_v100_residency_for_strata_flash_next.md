@@ -90,7 +90,35 @@ STRP 形式プロファイルを自作した。
 
 ### 結果
 
-decode / prefill（tok/s, エンジン計測値）
+llama-split-bench 式の深度ラダー：各段は指定トークン長の新規プロンプトを投げて prefill（read）/
+decode を計測する（Strata は OpenAI API 経由のため llama-split-bench は非適用、自作スクリプトで
+同等の計測を実施）。V100 は `--mmap-experts` 構成（常駐 20,235・プロセス RAM ~2 GiB）、
+3060 は arena 構成（常駐 4,720）。
+
+![深度ラダー](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/strata-ladder-ja.png)
+
+| depth（プロンプト tok） | V100 prefill t/s | V100 decode t/s | 3060 prefill t/s | 3060 decode t/s |
+|---:|---:|---:|---:|---:|
+| 130 | 40.6 | 35.4 | 58.1 | 29.5 |
+| 7,852 | 340.7 | 37.9 | 434.8 | 29.7 |
+| 16,042 | 439.4 | 39.8 | 436.9 | 26.3 |
+| 24,076 | 441.7 | 39.6 | 431.8 | 30.5 |
+| 30,472 | 433.2 | 39.2 | 416.3 | 28.1 |
+
+depth 0 相当の prefill（生成なし・プロンプト長別）:
+
+| prompt tok | V100 mmap prefill t/s | 3060 arena prefill t/s |
+|---:|---:|---:|
+| 598 | 158.8 | 226.1 |
+| 2,080 | 306.2 | 369.0 |
+| 8,242 | 403.6 | 420.1 |
+
+計測時の最大 VRAM: V100 32,063 MiB / 3060 11,521 MiB。
+
+注: V100 mmap 側の decode（35〜40 t/s）は各段とも新規プロンプトでページキャッシュが
+コールドな影響を含む。後述の追補の通り、暖機後の持続 decode は 46〜50 t/s。
+
+参考：初回計測（arena 構成・同一会話を伸ばす累積型。prefill はその段で新規に読んだ分の速度）
 
 | depth | 3060 4,720 slot | V100 8,000 slot | V100 20,187 slot |
 |---:|---:|---:|---:|
@@ -163,4 +191,7 @@ MoE の decode はメモリ帯域律速で電力が 80〜110W に跳ねるため
 
 ## 添付
 
+- [strata-ladder-ja.png](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/strata-ladder-ja.png) / [strata-ladder-en.png](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/strata-ladder-en.png) — 深度ラダーの図
+- [results-ladder-v100mmap.json](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/results-ladder-v100mmap.json) / [results-ladder-3060.json](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/results-ladder-3060.json) — ラダー + depth0 prefill の生データ
+- [argv-v100-mmap.txt](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/argv-v100-mmap.txt) / [argv-3060-arena.txt](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/argv-3060-arena.txt) — エンジン起動引数
 - [v100-thermal.csv](attachment/2026-09-29_105132_sm70_port_and_full_v100_residency_for_strata_flash_next/v100-thermal.csv) — 持続負荷中の温度・電力・クロック（3 秒間隔）
