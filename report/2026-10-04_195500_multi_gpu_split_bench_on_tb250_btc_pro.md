@@ -13,14 +13,14 @@ BIOSTAR TB250-BTC PRO（マイニングボード、Celeron G3930 / 32 GiB）に�
 
 結果、**分割構成はいずれも「速い方のカード単体」を上回れない**ことが確認できました。特に PCIe 2.0 x1 経由の tensor 分割は同期コストが支配的で、decode が単体の 1/5 程度まで落ちます。旧 Kepler 2 枚でも同じ傾向で、GT 730 単体 13.3→9.8 t/s に対し tensor 分割は 11.6→8.8 t/s に留まりました。
 
-iGPU（HD Graphics 610）は Vulkan 計測中に `ErrorDeviceLost` で GPU ハングを繰り返し、有効なラダー計測が不可能だったため除外しました。GT 430（Fermi）は対応ドライバ自体が存在せず計測不可です。
+iGPU（HD Graphics 610）は Vulkan 計測中に `ErrorDeviceLost` で GPU ハングを繰り返し、有効なラダー計測が不可能だったため除外しました。GT 430（Fermi）は当初全経路が塞がれていましたが、NVIDIA 390.157 + OpenCL/CLBlast 経路で推論動作を確認しました（追記セクション参照。PCIe x1 越えの同期コストで CPU より遅いためベンチ対象には含めていません）。
 
 ## ハードウェア
 
 | 項目 | 内容 |
 |------|------|
 | コンピュータ / マザーボード | BIOSTAR TB250-BTC PRO（マイニングボード） |
-| GPU | RX 6400 4GB（Navi 24）/ Pro WX 2100 2GB（Polaris 12）/ GT 730 1GB GDDR5（GK208B）/ GT 710 2GB DDR3（GK208B）/ GT 430 1GB DDR3（GF108 Fermi、計測不可）+ iGPU HD Graphics 610（計測不能で除外） |
+| GPU | RX 6400 4GB（Navi 24）/ Pro WX 2100 2GB（Polaris 12）/ GT 730 1GB GDDR5（GK208B）/ GT 710 2GB DDR3（GK208B）/ GT 430 1GB DDR3（GF108 Fermi、OpenCL 経路で動作確認・追記参照）+ iGPU HD Graphics 610（計測不能で除外） |
 | GPU 接続 | RX 6400: PCIe 4.0 x16 直挿し。WX 2100 含む残り全スロット: **PCIe 2.0 x1 ライザー**（実効 ~500 MB/s） |
 | CPU | Intel Celeron G3930 @ 2.90 GHz（2 コア / 2 スレッド、Kaby Lake） |
 | メモリ | 32 GiB |
@@ -52,7 +52,7 @@ GT 730/710（GK208B, sm_35）は現行スタックでは全経路が塞がれて
 | デバイス | 経緯 |
 |------|------|
 | Intel HD Graphics 610 | ANV で Vulkan は列挙されるが、depth 4096 付近で `vk::Queue::submit: ErrorDeviceLost`（GPU ハング→リセット）を再現性よく起こし、ラダーが完走しない。hangcheck を切れば序盤は動くが除外判断 |
-| GT 430 (Fermi, GF108) | 470 は Kepler 以降のみ対応（GT 430 は 390.xx 系が必要だが kernel 6.12 では成立せず）。nouveau では `failed to create ce channel, -22` で初期化失敗、Mesa Clover にも列挙されず OpenCL 経路もなし |
+| GT 430 (Fermi, GF108) | **当初は計測不能と判断**: 470 は Kepler 以降のみ対応（390.xx が必要だが kernel 6.12 では成立困難と見込み）、nouveau では `failed to create ce channel, -22` で初期化失敗、Mesa Clover にも列挙されず。→ 後日 390.157 + OpenCL/CLBlast 経路で動作確認（下記追記参照） |
 
 ### デバイス番号
 
@@ -117,6 +117,37 @@ depth 0 の新規プロンプト prefill（t/s）:
 | ~512 | 121.6 | 57.6 | 74.1 | 98.3 |
 | ~1024 | 123.0 | 58.0 | 81.8 | 99.2 |
 
+### 追記: GT 430 (Fermi) — NVIDIA 390.157 + OpenCL/CLBlast 経路（2026-10-04 夜）
+
+ユーザ要望により、Fermi (sm_21) を 2023 年当時の llama.cpp + OpenCL/CLBlast スタックで動かす実験を追加で実施しました。
+
+**ドライバ**: Debian bookworm の `nvidia-legacy-390xx-kernel-dkms 390.157-16`（6.12 対応パッチ群内蔵）を DKMS ビルド・導入し、NVIDIA 公式 `.run` (390.157) で userspace を導入。`nvidia-smi` で GT 430 / GT 730 / GT 710 の 3 枚を認識。
+
+**ハマり所**:
+
+1. 390 ロード中に 470 が再自動ロードされ、userspace 不一致で `GPU access blocked` になる → 470 を明示 unload で解決
+2. `clinfo` に NVIDIA platform が出ず、NVIDIA OpenCL ICD が `clGetExportTable` で segfault → 真因は **`/dev/nvidia-uvm` の major 不一致**（390 uvm は major 237 で登録されるが 470 時代の 235 ノードが残存）。`mknod` 作り直しで即座に解決し、`clinfo` に NVIDIA CUDA platform（OpenCL 1.2 CUDA 9.1.84）+ **GT 430 OpenCL 1.1** が列挙されるようになった
+
+**llama.cpp**: `2e6cd4b`（2023-05-23、CLBlast 導入の merge commit そのもの）を `make LLAMA_CLBLAST=1`（clblast 1.6.3）でビルド。デバイス選択は `GGML_OPENCL_PLATFORM=0 GGML_OPENCL_DEVICE=1`。
+
+**モデル**: このコミットは GGJT v3 のみ受け付け GQA 非対応のため、TinyLlama-1.1B（GQA）はロード不可。非 GQA の **OpenLLaMA-3B** を当時の `convert.py` で変換（BF16 safetensors を uint16 読み+bit shift で F32 デコードするパッチを追加）。`llama.cpp` 側にも MODEL_1B/3B 登録 + `n_mult=8640` ヘッダ修正が必要だった（[llama-2023-clblast-port.patch](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/llama-2023-clblast-port.patch)）。
+
+**結果**（OpenLLaMA-3B Q4_0 1.93GB, ctx=512, eval 31 トークン）:
+
+| 構成 | decode | VRAM |
+|------|------:|------:|
+| CPU のみ (ngl=0) | **4.91 t/s** | — |
+| GT430 ngl=4 | 2.40 t/s | ~270 MB |
+| GT430 ngl=6 | 1.90 t/s | ~400 MB |
+| GT430 ngl=8 | 1.58 t/s | 531 MB |
+| GT430 ngl=10 | 1.35 t/s | 664 MB |
+| GT430 ngl=12 | 起動はするが推論中に `clEnqueueNDRangeKernel` が -4（CL_MEM_OBJECT_ALLOCATION_FAILURE） | 797 MB |
+| GT730 ngl=10 | 2.61 t/s | 664 MB |
+| GT710 ngl=20 | 0.84 t/s | 1328 MB |
+| GT710 ngl=26 | 1728 MB 載るが prompt 用 dequant バッファ（出力層 fp32 で ~410 MB 級）で -4 | — |
+
+**所感**: GT 430 での推論は**動作する**（生成も正常: “Tokyo, the largest city in Asia...” 等）。ただし PCIe x1 ライザー経由では**オフロード 1 層あたり +55 ms/token** と純粋に逆効率で、AVX2 すらない Celeron CPU 単独（4.91 t/s）を大きく下回る。Kepler 2 枚も CLBlast 経路では CUDA sm_35 実測（GT 730: 13.3→9.8 t/s）に遠く及ばず。このため OpenCL 路線が動いた時点で CUDA 8 + `8944a13` フォールバックは不要と判断し未実施。
+
 ### 所感
 
 - **分割は常に「速いカード単体」に負ける**。Vulkan でも CUDA/Kepler でも、layer 分割は遅いカードの律速になり、tensor 分割は x1 リンクの同期コストで単体以下。今回の 2 つの系統で同じ結論が再現しました。
@@ -130,4 +161,6 @@ depth 0 の新規プロンプト prefill（t/s）:
 
 - [run-info-vulkan.json](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/run-info-vulkan.json) / [run-info-cuda.json](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/run-info-cuda.json)
 - [kepler-sm35-shim.patch](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/kepler-sm35-shim.patch)（llama.cpp b11384 を sm_35 でビルド可能にする pre-Volta warp-intrinsic shim）
+- [llama-2023-clblast-port.patch](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/llama-2023-clblast-port.patch)（llama.cpp 2e6cd4b 向け: convert.py の BF16 safetensors 対応 + head_dim=100 推定、llama.cpp の MODEL_1B/3B 登録）
+- [fermi-clblast-notes.txt](attachment/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro/fermi-clblast-notes.txt)（390.157 環境の nvidia-smi/clinfo 出力と CLBlast ngl スイープ結果）
 - 各アームの results-*.json / results-*-pp0.json / argv-*.txt（attachment ディレクトリ内）
