@@ -1,8 +1,8 @@
 env
-LD_LIBRARY_PATH=/home/eightman/bench/llama-src/build-sm35/bin:/opt/bullseye/opt/cuda-11.4/lib64
-/home/eightman/bench/llama-src/build-sm35/bin/llama-server
+LD_LIBRARY_PATH=~/bench/llama-src/build-sm35/bin:/opt/bullseye/opt/cuda-11.4/lib64
+~/bench/llama-src/build-sm35/bin/llama-server
 -m
-/home/eightman/bench/models/tinyllama-1.1b-chat.Q4_0.gguf
+~/bench/models/tinyllama-1.1b-chat.Q4_0.gguf
 --host
 127.0.0.1
 --port

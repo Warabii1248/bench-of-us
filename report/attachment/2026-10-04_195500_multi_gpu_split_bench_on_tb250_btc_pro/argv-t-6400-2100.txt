@@ -1,8 +1,8 @@
 env
-LD_LIBRARY_PATH=/home/eightman/bench/llama-bin/llama-b11384/lib
-/home/eightman/bench/llama-bin/llama-b11384/llama-server
+LD_LIBRARY_PATH=~/bench/llama-bin/llama-b11384/lib
+~/bench/llama-bin/llama-b11384/llama-server
 -m
-/home/eightman/bench/models/Qwen3-1.7B-Q4_K_M.gguf
+~/bench/models/Qwen3-1.7B-Q4_K_M.gguf
 --host
 127.0.0.1
 --port
