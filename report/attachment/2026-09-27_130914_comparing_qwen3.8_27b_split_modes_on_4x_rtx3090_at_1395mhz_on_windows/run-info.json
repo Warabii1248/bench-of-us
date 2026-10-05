@@ -1,0 +1,44 @@
+{
+  "tag": "fixed1395-full-20260927-03-workload",
+  "date": "2026-09-27T21:03:55.943314+09:00",
+  "ctx": 262144,
+  "stages": "0,32000,64000,128000,196000,258000",
+  "n_predict": 1000,
+  "machine": "ASUS ROG CROSSHAIR VIII DARK HERO - RTX 3090 x4 - Windows 11",
+  "bin": "llama-b11146-cuda12.4/bin/llama-server.exe",
+  "bin_version": "0.00.000.758 I srv  llama_server: initializing ...\nversion: 0.5.0-dev (build 11146, commit 7fe450e19)\nbuilt with Clang 20.1.8 for Windows x86_64",
+  "bin_sha256": "7b886298b688509ced3e92b420edd57dd3d665da72c1fc207d7a537be5870352",
+  "model": "L:\\ModelStore\\LLM\\GGUF\\unsloth\\Qwen3.8-27B-GGUF\\Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "model_sha256": "3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e",
+  "model_bytes": 17559178144,
+  "cache_k": "q8_0",
+  "cache_v": "q8_0",
+  "launch_prefix": "",
+  "tensor_split": "equal",
+  "modes": [
+    {
+      "name": "layer",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3",
+      "split": "layer",
+      "argv_file": "argv-layer.txt"
+    },
+    {
+      "name": "tensor",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3",
+      "split": "tensor",
+      "argv_file": "argv-tensor.txt"
+    }
+  ],
+  "speculative_decoding": "draft-mtp, n_max=2, draft KV q8_0",
+  "power_limit_w_per_gpu": 250,
+  "clock_control": "User locked all GPU graphics clocks at 1395 MHz; memory clocks unlocked; launcher checks graphics clocks and never changes settings",
+  "graphics_clock_mhz": 1395,
+  "remote_telemetry_interval_ms": 100,
+  "clock_guard": "1395 MHz required at launch. During load, lower observed clocks are recorded rather than treated as errors; clocks above 1410 MHz abort. Power limit, temperature and thermal/HW power-brake guards are unchanged.",
+  "measurement_commit": "7af72d4085aa5073677d41389144112dd94fcb74",
+  "windows_launcher": "run_windows_clock1395_record.py",
+  "windows_launcher_sha256": "1e290dc4c8f556c7aeccd933129feb1ddff8c6ac0f088ea7fc2b9e96fdc9f3fd",
+  "guard": "Launcher checks pre-existing processes and stops on any new GPU PID except owned server. Desktop baseline allowed; upstream guard disabled to avoid treating Windows display apps as inference.",
+  "real_prompt_correction": true,
+  "repeat": 1
+}

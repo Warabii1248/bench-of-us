@@ -1,0 +1,24 @@
+{
+  "tag": "iq4-production-20260928-023150-r2-tensor",
+  "date": "2026-09-28T03:23:57+09:00",
+  "ctx": 131072,
+  "stages": "0,8000,16000,32000,64000,96000,128000",
+  "n_predict": 1000,
+  "bin": "~/Documents/Codex/2026-09-28/agents-md-claude-md-bench-of/work/bench-of-us/src/llama-split-bench/../llama.cpp-9adc7f420-rccl/bin/llama-server",
+  "bin_version": "0.00.000.281 I srv  llama_server: initializing ... version: 0.5.0-dev (build 257, commit 9adc7f420) built with GNU 15.2.0 for Linux x86_64",
+  "bin_sha256": "91b1a32c7a26a57093bd19260da694c37cab9f32bc8b8614b442066c6fafb0dc",
+  "cache_k": "q8_0",
+  "cache_v": "q8_0",
+  "launch_prefix": "env GGML_CUDA_ALLREDUCE=nccl NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT LD_LIBRARY_PATH=~/Documents/Codex/2026-09-28/agents-md-claude-md-bench-of/work/bench-of-us/src/llama-split-bench/../rccl-2.30.4-fatbin:/opt/rocm/core-10.0/lib",
+  "tensor_split": "5,4",
+  "machine": "ASUS ProArt X870E-CREATOR WIFI - RX 7900 XT 20GB + RX 7800 XT 16GB",
+  "modes": [
+    {
+      "name": "tensor",
+      "device": "ROCm0,ROCm1",
+      "split": "tensor",
+      "argv_file": "argv-tensor.txt"
+    }
+  ],
+  "public_copy": "Paths and bind addresses anonymized; private fields omitted"
+}

@@ -1,0 +1,30 @@
+{
+  "tag": "tensor",
+  "pp512": {
+    "prompt_n": 512,
+    "cache_n": 0,
+    "prompt_ms": 2347.706,
+    "prompt_per_second": 218.08522872966205,
+    "predicted_n": 64,
+    "predicted_per_second": 28.383236770257973,
+    "wall_s": 4.67
+  },
+  "pp2048": {
+    "prompt_n": 1978,
+    "cache_n": 0,
+    "prompt_ms": 8652.785,
+    "prompt_per_second": 228.59691995120647,
+    "predicted_n": 64,
+    "predicted_per_second": 27.944124171268207,
+    "wall_s": 10.91
+  },
+  "pp8192": {
+    "prompt_n": 8077,
+    "cache_n": 0,
+    "prompt_ms": 34485.635,
+    "prompt_per_second": 234.21346308397685,
+    "predicted_n": 64,
+    "predicted_per_second": 27.60304369561817,
+    "wall_s": 36.79
+  }
+}

@@ -1,0 +1,6 @@
+llama-split-bench
+commit: 7af72d4085aa5073677d41389144112dd94fcb74
+plot_bench.py modification:
+  Engine/version label only.
+  If run-info.json contains "engine", display that value.
+  Otherwise preserve the original llama.cpp behavior.
