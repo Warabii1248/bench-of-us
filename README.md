@@ -44,6 +44,7 @@ Claude Code、Codex、OpenCodeなどのコーディングエージェントを�
 
 | 日付 | タイトル | 作成者 | コンピュータ / マザーボード | GPU | ベンチ |
 |------|----------|--------|-----------------------------|-----|--------|
+| 2026-10-04 | [TB250-BTC PRO で新旧混成GPUの分割ベンチ (Vulkan + Kepler 復活CUDA)](report/2026-10-04_195500_multi_gpu_split_bench_on_tb250_btc_pro.md) | eightman999 | BIOSTAR TB250-BTC PRO | RX 6400 + Pro WX 2100 + GT 730 + GT 710（GT 430・HD 610 は計測不可） | Qwen3-1.7B Q4_K_M / TinyLlama-1.1B Q4_0 |
 | 2026-10-01 | [RTX 3090 4 枚で Qwen3.8 27B の split-mode を比較（Ubuntu・NCCL）](report/2026-10-01_203001_comparing_qwen3.8_27b_split_modes_on_4x_rtx3090_with_nccl_on_ubuntu.md) | 錦幸佳 | ASUS ROG CROSSHAIR VIII DARK HERO | RTX 3090 × 4 | Qwen3.8 27B UD-Q4_K_XL |
 | 2026-09-30 | [Tesla T4 4 枚で Nemotron 3 Nano Omni 33B を 128k コンテキストまで計測](report/2026-09-30_111720_profiling_nemotron_3_nano_omni_33b_up_to_128k_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Nemotron 3 Nano Omni 33B UD-Q4_K_M（層分割のみ） |
 | 2026-09-30 | [Tesla T4 4 枚で Nemotron 3.5 Lightning 30B A3B を 262k コンテキストまで計測](report/2026-09-30_110715_profiling_nemotron_3.5_lightning_30b_a3b_up_to_262k_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Nemotron 3.5 Lightning 30B A3B UD-Q4_K_M + MTP（層分割のみ） |
