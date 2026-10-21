@@ -1,0 +1,16 @@
+]633;E;echo '# 1M load attempts - Qwen3.8 27B Uncensored';495f1b4b-8741-45ee-a1d9-adabf4ebc4cc]633;C# 1M load attempts - Qwen3.8 27B Uncensored
+
+All attempts used --split-mode tensor -c 1048576 --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 262144.
+
+## 1. Q5_K_M + q8_0 KV
+0.07.099.193 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 5220.29 MiB on device 0: cudaMalloc failed: out of memory
+
+## 2. Q5_K_M + q4_0 KV
+0.07.576.675 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 1024.00 MiB on device 0: cudaMalloc failed: out of memory
+0.07.576.693 E ggml_backend_buft_alloc_buffer_n_default: failed to allocate CUDA0 buffer of size 1073741824
+
+## 3. Q4_K_M + q4_0 KV
+0.09.806.198 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 1024.00 MiB on device 0: cudaMalloc failed: out of memory
+0.09.806.216 E ggml_backend_buft_alloc_buffer_n_default: failed to allocate CUDA0 buffer of size 1073741824
+
+result: 1M is not feasible on 4x Tesla T4 (15 GiB each) for this model.

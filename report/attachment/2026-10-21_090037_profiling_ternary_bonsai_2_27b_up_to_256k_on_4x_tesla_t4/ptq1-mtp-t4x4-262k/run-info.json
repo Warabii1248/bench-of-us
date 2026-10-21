@@ -1,0 +1,23 @@
+{
+  "tag": "bonsai-ptq1-mtp-t4x4-262k",
+  "date": "2026-10-21T10:20:35+09:00",
+  "ctx": 262144,
+  "stages": "0,32000,64000,128000,196000,258000",
+  "n_predict": 1000,
+  "modes": [
+    {
+      "name": "t4x4",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3",
+      "split": "layer",
+      "argv_file": "argv-t4x4.txt"
+    }
+  ],
+  "machine": "HPE ProLiant DL380 Gen10 - 4x Tesla T4",
+  "bin": "~/llama-bonsai/build/bin/llama-server",
+  "bin_version": "version: 0.2.0-dev (build 1, commit 73bfe6c) built with GNU 15.2.0 for Linux x86_64",
+  "bin_sha256": "15a520f81d07e4ff72f3e0325d4a637debff1b75d5092fa46553e540686aab05",
+  "cache_k": "f16",
+  "cache_v": "f16",
+  "launch_prefix": "",
+  "tensor_split": ""
+}

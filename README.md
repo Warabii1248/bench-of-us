@@ -36,6 +36,13 @@ Claude Code、Codex、OpenCodeなどのコーディングエージェントを�
 - 図や JSON は `report/attachment/<レポートのbasename>/` に置きます
 - 下の「レポート一覧」の表に 1 行追加します
 
+## 関連プロジェクト
+
+- [mmlu-bench](https://github.com/moriyasujapan/mmlu-bench) — こちらが「速度」を集めるのに対して、
+  MMLU の 4 択正答率で「賢さ」を集める姉妹リポジトリです。量子化やバックエンドを変えたときに
+  どれだけ精度が落ちるかを、同じ問題セットで比較できます。OpenAI 互換 API を喋るものなら
+  vLLM・llama.cpp・Ollama などを問わず測れます。順位表: https://moriyasujapan.github.io/mmlu-bench/
+
 ## レポート一覧
 
 新しいものが上です。
@@ -44,7 +51,14 @@ Claude Code、Codex、OpenCodeなどのコーディングエージェントを�
 
 | 日付 | タイトル | 作成者 | コンピュータ / マザーボード | GPU | ベンチ |
 |------|----------|--------|-----------------------------|-----|--------|
+| 2026-10-21 | [Tesla T4 4 枚で Ternary Bonsai 2 27B（三値 2bit）を 256k コンテキストまで計測](report/2026-10-21_090037_profiling_ternary_bonsai_2_27b_up_to_256k_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Ternary Bonsai 2 27B PQ2_0 / PTQ1_0（32k〜258k、layer、1/2/4 枚比較、MTP ヘッド） |
+| 2026-10-20 | [Tesla T4 4 枚で Tess-4.5-27B Q8_0 を MTP 付きで 256k まで計測](report/2026-10-20_153835_profiling_tess_4.5_27b_q8_0_with_mtp_up_to_256k_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Tess-4.5-27B Q8_0 + MTP（32k〜258k、layer/tensor、MTP なし比較、HumanEval） |
+| 2026-10-18 | [Tesla T4 4 枚で Ornith 1.5 35B A3B の MTP ヘッド交換と 512k/1M コンテキストを検証](report/2026-10-18_091752_validating_mtp_head_swap_and_512k_1m_context_of_ornith_1.5_35b_a3b_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Ornith 1.5 35B A3B Q4_K_M（純正/外部 MTP、32k/254k/512k、1M ロード確認） |
+| 2026-10-18 | [Tesla T4 4 枚で Qwen3.8 27B Uncensored の 256k/512k と 1M の可否を検証](report/2026-10-18_170446_validating_qwen3.8_27b_uncensored_at_256k_512k_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Qwen3.8 27B Uncensored Q5_K_M（32k〜512k、1M は VRAM 不足、HumanEval） |
+| 2026-10-17 | [Tesla T4 4 枚で Qwen3.8-Flash-Next の AD-3.84bpw-IQ4_XS-M64 を 32k コンテキストで計測](report/2026-10-17_222953_profiling_qwen3.8_flash_next_ad_3.84bpw_iq4_xs_m64_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Qwen3.8-Flash-Next AD-3.84bpw-IQ4_XS-M64（32k、n-cpu-moe 4） |
+| 2026-10-17 | [Tesla T4 4 枚で Nemotron 3.5 Super VL 120B-A12B の UD-IQ2_XXS と UD-IQ2_M を 64k コンテキストまで計測](report/2026-10-17_221656_profiling_nemotron_3.5_super_vl_120b_a12b_on_4x_tesla_t4.md) | MG8853 | HPE ProLiant DL380 Gen10 | Tesla T4 × 4 | Nemotron 3.5 Super VL 120B-A12B UD-IQ2_XXS / UD-IQ2_M（64k） |
 | 2026-10-16 | [Tesla V100-PCIE-32GB と PG500-216 で Qwen3.8 Flash Next を 192k / 256k で計測（最終構成・電力上限 170 W / 250 W）](report/2026-10-16_224624_profiling_qwen3.8_flash_next_at_192k_and_256k_on_tesla_v100_pcie_and_pg500_216_at_170w_and_250w.md) | warabii | MSI MPG X570 GAMING EDGE WIFI | Tesla V100-PCIE-32GB × 1 + Tesla PG500-216 × 1 | Qwen3.8 Flash Next IQ3E-Q8D-MTP |
+| 2026-10-11 | [Apple M1 Max 64GB で Qwen3.8 27B UD-Q4_K_M の MTP 投機的デコードを 64k まで比較](report/2026-10-11_125828_comparing_mtp_speculative_decoding_of_qwen3.8_27b_up_to_64k_on_apple_m1_max.md) | Kenya Nara (@penta2himajin) | Apple MacBook Pro 18,4 | Apple M1 Max × 1 | Qwen3.8 27B UD-Q4_K_M（64k、MTP あり/なし） |
 | 2026-10-08 | [Tesla V100-PCIE-32GB 1 枚で Qwen3.8 27B UD-Q4_K_M を 262k コンテキストまで計測](report/2026-10-08_105734_profiling_qwen3.8_27b_ud_q4_k_m_up_to_262k_on_tesla_v100_pcie_32gb.md) | sh1ma | Supermicro SYS-1019GP-TT | Tesla V100-PCIE-32GB × 1 | Qwen3.8 27B UD-Q4_K_M（262k、profile） |
 | 2026-10-07 | [V100 2枚で Qwen3.8 27B の Layer・Tensor分割と MTP・DFlash2 を比較](report/2026-10-07_073209_comparing_layer_and_tensor_mtp_and_dflash2_on_2x_v100.md) | pakutoma | ASRock B550M Pro RS | Tesla V100-SXM2-16GB × 2 | Qwen3.8 27B UD-Q4_K_M |
 | 2026-10-05 | [Tesla V100 16GB ×2・NVLink・各150W制限でQwen3.8 27Bのsplit-modeを比較](report/2026-10-05_203331_comparing_qwen3_8_27b_split_modes_on_2x_v100_nvlink_at_150w.md) | KotaroFurukawa | Supermicro X11SPi-TF | Tesla V100-SXM2-16GB × 2（NVLink・各150W） | Qwen3.8-27B Q4_K_M（64k、layer/tensor） |

@@ -1,0 +1,30 @@
+{
+  "tag": "t4x1",
+  "pp512": {
+    "prompt_n": 512,
+    "cache_n": 0,
+    "prompt_ms": 1900.512,
+    "prompt_per_second": 269.40108770689164,
+    "predicted_n": 64,
+    "predicted_per_second": 21.187324195655183,
+    "wall_s": 4.98
+  },
+  "pp2048": {
+    "prompt_n": 1978,
+    "cache_n": 0,
+    "prompt_ms": 7263.946,
+    "prompt_per_second": 272.30378639929313,
+    "predicted_n": 64,
+    "predicted_per_second": 20.941287609970843,
+    "wall_s": 10.28
+  },
+  "pp8192": {
+    "prompt_n": 8077,
+    "cache_n": 0,
+    "prompt_ms": 30289.214,
+    "prompt_per_second": 266.66258160413145,
+    "predicted_n": 64,
+    "predicted_per_second": 20.13296062855742,
+    "wall_s": 33.43
+  }
+}

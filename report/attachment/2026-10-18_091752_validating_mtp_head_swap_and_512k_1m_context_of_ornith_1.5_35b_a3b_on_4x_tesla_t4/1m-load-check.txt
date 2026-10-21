@@ -1,0 +1,29 @@
+# 1M context load check (Ornith-1.5-35B-Q4_K_M, Tesla T4 x4, tensor, q8_0 KV, YaRN factor 4.0)
+
+date: 2026-10-18 (JST)
+
+## command
+```
+/opt/llama.cpp/build/bin/llama-server \
+  -m /opt/models/ornith15-mtp/Ornith-1.5-35B-Q4_K_M.gguf \
+  --device CUDA0,CUDA1,CUDA2,CUDA3 --split-mode tensor -ngl all -fa on -t 16 --jinja \
+  -c 1048576 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
+  --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 262144 \
+  --spec-type draft-mtp --spec-draft-n-max 2
+```
+
+## result
+LOAD_OK ctx=1048576 scale=4.0
+0, 12279 MiB
+1, 13559 MiB
+2, 12279 MiB
+3, 13559 MiB
+gen ok, decode_tps 42.3 draft_acc 8 / 14
+
+## server log excerpt
+0.06.535.265 W llama_context: n_ctx_seq (1048576) > n_ctx_train (262144) -- possible training context overflow
+0.09.174.564 I srv  llama_server: model loaded
+0.09.174.569 I srv  llama_server: listening on http://127.0.0.1:18097
+0.11.324.096 I slot print_timing: id  0 | task 0 | prompt eval time =     911.04 ms /     6 tokens (  151.84 ms per token,     6.59 tokens per second)
+0.11.324.101 I slot print_timing: id  0 | task 0 |        eval time =     354.22 ms /    16 tokens (   23.61 ms per token,    42.35 tokens per second)
+0.11.324.111 I slot print_timing: id  0 | task 0 | draft acceptance = 0.57143 (    8 accepted /    14 generated), mean len =  2.14
